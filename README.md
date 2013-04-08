@@ -12,12 +12,13 @@ Javascript
 <script>$('.theEnd').credits();</script>
 
 HTML
-<pre><a href="#" class="theEnd">THE END</a></pre>
+<code><a href="#" class="theEnd">THE END</a></code>
 
 Icons
 Place icons in a "img" directory or specify path in options.
 
 Options
+<code>
 //Default Configuration
 $(".theEnd").credits({
   url: 'humans.txt',  	// path to the txt or html file
@@ -33,6 +34,7 @@ $(".theEnd").credits({
 	fixe: false,	      	// Animated or not
 	callback: null	      // Callback function
 });
+</code>
 
 Licence : CC-BY 2.0
 
