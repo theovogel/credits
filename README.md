@@ -12,7 +12,7 @@ Javascript
 <script>$('.theEnd').credits();</script>
 
 HTML
-<a href="#" class="theEnd">THE END</a>
+<pre><a href="#" class="theEnd">THE END</a></pre>
 
 Icons
 Place icons in a "img" directory or specify path in options.
