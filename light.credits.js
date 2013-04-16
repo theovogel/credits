@@ -13,7 +13,6 @@
 			music: '',
 			img: '',
 			imgDirectory: 'img/controls.png',
-			transition: 'fadeIn',
 			fullScreen: false,
 			showText: false,
 			speed: 'normal',
@@ -24,16 +23,6 @@
 		};
 
 		options = $.extend(options, arguments);
-
-		$.fn.transition = function(anim)
-		{
-			switch(anim){
-				case 'toggle': this.toggle(); break;
-				case 'fadeIn': this.fadeIn(); break;
-				case 'slideDown': this.slideDown(); break;
-				default: this.fadeIn();
-			}
-		};
 		
 		$.fn.enterFullscreen = function() 
 		{
@@ -48,18 +37,17 @@
 		$(this).click(function(e){
 
 			e.preventDefault();
-
+			
 
 		//===============Background Black===============
 		if(options.showScrollBar) { var overflow = $('body').css('overflow'); $('body').css('overflow', 'hidden'); }
 		if(options.fullScreen) 	  { var hVP = screen.height; } else { var hVP = $(window).height(); }
-		if(options.fixe == false) { var playPause = '<div style="width: 64px; height: 64px; background: url('+options.imgDirectory+') -64px 0 repeat;" id="playPause"></div>'; } else { playPause = ''; }
 
 		if($('#backInBlack').length == 0) {
 			if(options.img != '') {var background = 'background: black url(\''+options.img+'\') no-repeat center center; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;'} else {var background = ' background-color: black;'; }
-			var blackBack = $('<div id="backInBlack" style="display: block; position: fixed; opacity:0; top: 0; left: 0; width: 100%; height: 100%; '+background+' text-align: center; z-index: 0; overflow: hidden;"><div class="controls" style="position: fixed; '+options.ctrlPosition+': 0; top: 0; cursor: pointer; z-index: 10;"><div style="width: 64px; height: 64px; background: url('+options.imgDirectory+') 0 0 repeat;" id="stop"></div>'+playPause+'</div></div>').appendTo('body');
+			var blackBack = $('<div id="backInBlack" style="display: block; position: fixed; opacity:0; top: 0; left: 0; width: 100%; height: 100%; '+background+' text-align: center; z-index: 0; overflow: hidden;"><div class="controls" style="position: fixed; '+options.ctrlPosition+': 0; top: 0; cursor: pointer; z-index: 10;"><div style="width: 64px; height: 64px; background: url('+options.imgDirectory+') 0 0 repeat;" id="stop"></div></div></div>').appendTo('body');
 			if(options.fullScreen) {blackBack.enterFullscreen();}
-			blackBack.transition(options.transition);
+			blackBack.animate({opacity:1});
 		}
 
 		$('#backInBlack #credits').empty();
@@ -102,67 +90,34 @@
 
 				$('#credits').animate({bottom: hVP+'px',}, speed, 'linear', stopCredits);
 
-
-				//===============playPause Button===============
-				var play = true;
-
-
-				//===============playPause Button===============
-				var play = true;
-
-				$('#playPause').click(function(){
-
-					if(play) {
-						if(options.music != '') { playPause(); }
-						$('#credits').stop();
-						play = false;
-						$('#playPause').css({backgroundPosition: '-128px 0'});
-
-					} else {
-						if(options.music != '') { playPause(); }
-						$('#credits').animate({bottom: hVP+'px',}, speed, 'linear', stopCredits);
-						play = true;
-						$('#playPause').css({backgroundPosition: '-64px 0'});
-					}
-					
-				});
-
 			}
 
 
 			//===============Music Option===============
 			if(options.music != '') {
 				var nameMusic = options.music.replace(/\.mp3|\.ogg/i, '');
-				$('.controls').append('<audio id="audioPlayer" autoplay><source src="'+nameMusic+'.mp3"></source><source src="'+nameMusic+'.ogg"></source></audio><br><img id="mute" src="'+options.imgDirectory+'sound.png">');
+				$('.controls').append('<audio id="audioPlayer" autoplay><source src="'+nameMusic+'.mp3"></source><source src="'+nameMusic+'.ogg"></source></audio><div id="mute" style="width: 64px; height: 64px; background: url('+options.imgDirectory+') -192px 0 repeat;"></div>');
 
 				var player = document.getElementById('audioPlayer');
-
-				function playPause() {
-					if(player.paused) {
-						player.play();
-					} else {
-						player.pause();
-					}
-				}
 
 				$('#mute').click(function(){
 					
 					if(player.volume > 0) {
 						player.volume = 0;
-						$('#mute').attr('src', options.imgDirectory+'mute.png');
+						$('#mute').css({backgroundPosition: '-256px 0'});
 					} else {
 						player.volume = 1;
-						$('#mute').attr('src', options.imgDirectory+'sound.png');
+						$('#mute').css({backgroundPosition: '-192px 0'});
 					}
 					
 				});
 			}
 
-			$('#stop, #mute, #playPause').on('mouseover', function(){
+			$('#stop, #mute').on('mouseover', function(){
 				$(this).css({outline: '1px inset white'});
 			});
 
-			$('#stop, #mute, #playPause').on('mouseout', function(){
+			$('#stop, #mute').on('mouseout', function(){
 				$(this).css({outline: 'none'});
 			});
 
@@ -172,12 +127,12 @@
 
 		}
 
+
 		//===============Stop Credits===============
 		function stopCredits() {
 			$('#audioPlayer').remove();
-			$('#backInBlack').fadeOut({
+			$('#backInBlack').animate({opacity:0}, {
 				complete: function(){
-					$('#credits').stop();
 					$(this).remove();
 					if(options.showScrollBar) { $('body').css('overflow', overflow); }
 				}
@@ -199,4 +154,4 @@
 
 }
 
-})(jQuery);
+})(window.Zepto || window.jQuery);
